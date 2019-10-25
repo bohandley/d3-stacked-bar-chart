@@ -67,7 +67,7 @@ function displayPopulation(svg, data, ageDist, v=0){
 
 	// access the svg element, set margin, width, height, and append a group
 	
-	var	margin = {top: 20, right: 20, bottom: 30, left: 40},
+	var	margin = {top: 20, right: 20, bottom: 30, left: 100},
 		width = +svg.attr("width") - margin.left - margin.right,
 		height = +svg.attr("height") - margin.top - margin.bottom,
 		g = svg.append("g").attr("transform", "translate(" + margin.left + "," + margin.top + ")");
@@ -244,10 +244,18 @@ function addAxes(g, x, y, height, v=0) {
 		// append the y axis
 		g.append("g")
 			.attr("class", "axis")
-			.call(d3.axisLeft(y).ticks(null, "s"))
+			.call(d3.axisLeft(y).ticks(null, "s").tickFormat(function(d){ 
+				if (d == 0){
+					return d;
+				} else {
+					d = d +'';
+					return d[0] + ',000,000,000';
+				}
+				
+			}))
 			.append("text")
 			.attr("x", 2)
-			.attr("y", y(y.ticks().pop()) + 0.5)
+			.attr("y", y(y.ticks().pop()) + 1.5)
 			.attr("dy", "0.32em")
 			.attr("fill", "#000")
 			.attr("font-weight", "bold")
@@ -256,7 +264,7 @@ function addAxes(g, x, y, height, v=0) {
 	} else {
 		g.append("g")
 			.attr("class", "axis")
-			.call(d3.axisLeft(y).ticks(null, "s").tickFormat(d3.format(".0%")))
+			.call(d3.axisLeft(y).ticks(null, "s").tickFormat(function(d){ return d + '%'}))
 			.append("text")
 			.attr("x", 2)
 			.attr("y", y(y.ticks().pop()) + 0.5)
